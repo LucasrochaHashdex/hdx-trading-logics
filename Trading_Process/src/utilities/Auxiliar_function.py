@@ -8,6 +8,10 @@ from math import floor, ceil
 from typing import List, Optional
 import pandas_gbq
 from google.cloud import bigquery
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # BigQuery client
 client = bigquery.Client("hdx-data-platform")
@@ -415,14 +419,14 @@ def create_final_allocation_for_broker(allocation_df: pd.DataFrame) -> pd.DataFr
 
 def save_lot_units(df: pd.DataFrame, assets_list: List[str]) -> pd.DataFrame:
     """
-    Save lot units to BigQuery after filtering and processing the data.
+    Save lot units to BigQuery with user confirmation
     
     Args:
-        df: DataFrame with lot unit data
+        df: DataFrame with allocation data (from solver)
         assets_list: List of assets to filter
         
     Returns:
-        DataFrame with processed and saved data
+        DataFrame with lot units and sentences
     """
     try:
         # Validate inputs
@@ -451,8 +455,8 @@ def save_lot_units(df: pd.DataFrame, assets_list: List[str]) -> pd.DataFrame:
         df_assets["request_date"] = current_date
         list_sentences = create_primary_sentences(df_assets)
         # print(list_sentences)
-        # Define BigQuery parameters
-        project_id = "hdx-data-platform-users"
+        # Define BigQuery parameters from environment
+        project_id = os.getenv('GOOGLE_CLOUD_PROJECT_ID_USERS', 'hdx-data-platform-users')
         table_id = "team_trading.primary_requests"
         
         # Initialize BigQuery client
@@ -516,13 +520,13 @@ def save_lot_units(df: pd.DataFrame, assets_list: List[str]) -> pd.DataFrame:
         raise
 
 def save_secondary_allocation_trades(df: pd.DataFrame, 
-                                   csv_folder_path: str = r"G:\Drives compartilhados\Ops-Trading\Onshore\CSV B3 gestora - Executed Trades by fund") -> pd.DataFrame:
+                                   csv_folder_path: str = None) -> pd.DataFrame:
     """
     Save secondary allocation trades to BigQuery and CSV file
     
     Args:
         df: DataFrame with secondary allocation data (from create_final_allocation_for_broker)
-        csv_folder_path: Path to save CSV file (optional, has default)
+        csv_folder_path: Path to save CSV file (optional, uses environment variable if not provided)
         
     Returns:
         DataFrame with processed and saved data
@@ -531,6 +535,11 @@ def save_secondary_allocation_trades(df: pd.DataFrame,
         # Validate inputs
         if df.empty:
             raise ValueError("Input DataFrame is empty")
+        
+        # Get CSV folder path from environment if not provided
+        if csv_folder_path is None:
+            csv_folder_path = os.getenv('CSV_FOLDER_PATH', 
+                                      r"G:\Drives compartilhados\Ops-Trading\Onshore\CSV B3 gestora - Executed Trades by fund")
             
         # Get current date
         current_date = date.today().strftime("%Y-%m-%d")
@@ -572,8 +581,8 @@ def save_secondary_allocation_trades(df: pd.DataFrame,
         user_confirmation = input(f"\nDo you want to proceed with the BigQuery upload? (Y/N): ").strip().upper()
         
         if user_confirmation == 'Y':
-            # Define BigQuery parameters
-            project_id = "hdx-data-platform-users"
+            # Define BigQuery parameters from environment
+            project_id = os.getenv('GOOGLE_CLOUD_PROJECT_ID_USERS', 'hdx-data-platform-users')
             table_id = "team_trading.secondary_allocation_trades"
             
             # Initialize BigQuery client
@@ -631,13 +640,13 @@ def save_secondary_allocation_trades(df: pd.DataFrame,
         raise
 
 def save_adjustment_orders_to_csv(adjustment_df: pd.DataFrame, 
-                                 csv_path: str = r"G:\Drives compartilhados\Investment Management\Trading_Process\src\Daily_trades_use.csv") -> pd.DataFrame:
+                                 csv_path: str = None) -> pd.DataFrame:
     """
     Save adjustment orders to the Daily_trades_use.csv file
     
     Args:
         adjustment_df: DataFrame with adjustment allocation data
-        csv_path: Path to the Daily_trades_use.csv file
+        csv_path: Path to the Daily_trades_use.csv file (uses environment variable if not provided)
         
     Returns:
         DataFrame with the saved adjustment orders
@@ -646,6 +655,11 @@ def save_adjustment_orders_to_csv(adjustment_df: pd.DataFrame,
         if adjustment_df.empty:
             print("No adjustment orders to save")
             return pd.DataFrame()
+        
+        # Get CSV path from environment if not provided
+        if csv_path is None:
+            csv_path = os.getenv('DAILY_TRADES_CSV_PATH', 
+                               r"G:\Drives compartilhados\Investment Management\Trading_Process\src\Daily_trades_use.csv")
         
         # Read existing CSV
         existing_df = pd.read_csv(csv_path)

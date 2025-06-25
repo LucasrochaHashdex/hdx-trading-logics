@@ -5,28 +5,36 @@ import requests
 import pandas as pd
 from typing import Dict, Any, Optional, List
 from google.cloud import bigquery
+import os
+from dotenv import load_dotenv
 
-# BigQuery client
-client = bigquery.Client("hdx-data-platform")
+# Load environment variables
+load_dotenv()
+
+# BigQuery client with project ID from environment
+project_id = os.getenv('GOOGLE_CLOUD_PROJECT_ID', 'hdx-data-platform')
+client = bigquery.Client(project_id)
 
 # Asset lists
 list_thematics = ["DEFI11", "WEB311", "META11", "FOMO11"]
 list_nasdaq = ["HASH11", "SOLH11", "BITH11", "ETHE11", "XRPH11"]
 
 class TradingAPIManager:
-    def __init__(self, secrets_arn: str, region_name: str = 'us-east-1'):
+    def __init__(self, secrets_arn: str, region_name: str = None):
         """
         Initialize the Trading API Manager
         
         Args:
             secrets_arn (str): ARN for AWS Secrets
-            region_name (str): AWS region name
+            region_name (str): AWS region name (uses environment variable if not provided)
         """
         self.secrets_arn = secrets_arn
-        self.region_name = region_name
+        self.region_name = region_name or os.getenv('AWS_REGION', 'us-east-1')
         self.secrets = self._load_secrets()
-        self.inoa_base_url = 'http://10.10.5.8/'  # PROD
-        self.posttrades_base_url = 'https://api.postrade.btgpactual.com'
+        
+        # API endpoints from environment variables
+        self.inoa_base_url = os.getenv('INOA_BASE_URL', 'http://10.10.5.8/')
+        self.posttrades_base_url = os.getenv('POSTTRADES_BASE_URL', 'https://api.postrade.btgpactual.com')
 
     def _get_secret(self, secret_name: str) -> str:
         """

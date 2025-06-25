@@ -5,6 +5,10 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class EmailManager:
     """
@@ -13,15 +17,22 @@ class EmailManager:
     """
     
     def __init__(self):
-        # Fixed email configuration
-        self.smtp_server = "smtp.gmail.com"
-        self.smtp_port = 587
-        self.sender_email = "lucas.afonso@hashdex.com"
-        self.app_password = "scpb vuvs lfiu hcml"
-        self.recipient_email = "ets@xpi.com.br"
+        # Email configuration from environment variables
+        self.smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
+        self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
+        self.sender_email = os.getenv('SENDER_EMAIL')
+        self.app_password = os.getenv('GMAIL_APP_PASSWORD')
+        self.recipient_email = os.getenv('RECIPIENT_EMAIL')
+        
+        # Validate required environment variables
+        if not all([self.sender_email, self.app_password, self.recipient_email]):
+            raise ValueError(
+                "Missing required environment variables. Please check your .env file for: "
+                "SENDER_EMAIL, GMAIL_APP_PASSWORD, RECIPIENT_EMAIL"
+            )
     
     def _send_gmail_with_confirmation(self, subject, body, 
-                                      cc_emails=['trading@hashdex.com', 'operations@hashdex.com'], attachment_path=None):
+                                      cc_emails=None, attachment_path=None):
         """
         Send email through Gmail SMTP with user confirmation
         
@@ -31,6 +42,11 @@ class EmailManager:
             cc_emails (list, optional): List of CC email addresses
             attachment_path (str, optional): Path to file attachment
         """
+        # Default CC emails from environment variable
+        if cc_emails is None:
+            cc_emails_str = os.getenv('CC_EMAILS', 'trading@hashdx.com,operations@hashdx.com')
+            cc_emails = [email.strip() for email in cc_emails_str.split(',') if email.strip()]
+        
         # Show email preview
         print("=" * 60)
         print("📧 EMAIL PREVIEW")
@@ -263,7 +279,7 @@ class EmailManager:
         
         return '\n'.join(final_html)
     
-    def send_initial_orders_email(self, initial_function, cc_emails=['trading@hashdex.com', 'operations@hashdex.com']):
+    def send_initial_orders_email(self, initial_function, cc_emails=None):
         """
         📧 Send initial orders email with confirmation
         
@@ -327,7 +343,7 @@ class EmailManager:
             print("ℹ️ Initial orders workflow completed (no email sent)")
             return False
     
-    def send_adjustment_email(self, adjustment_results, iteration=0, cc_emails=['trading@hashdex.com', 'operations@hashdex.com']):
+    def send_adjustment_email(self, adjustment_results, iteration=0, cc_emails=None):
         """
         📊 Send adjustment cycle email with proper table formatting
         
@@ -388,13 +404,13 @@ class EmailManager:
 
 # Backward compatibility functions (optional)
 def send_initial_orders_email(initial_function, 
-                              cc_emails=['trading@hashdex.com', 'operations@hashdex.com']):
+                              cc_emails=None):
     """Backward compatibility wrapper"""
     email_manager = EmailManager()
     return email_manager.send_initial_orders_email(initial_function, cc_emails)
 
 def send_adjustment_email(adjustment_results, iteration=0, 
-                          cc_emails=['trading@hashdex.com', 'operations@hashdex.com']):
+                          cc_emails=None):
     """Backward compatibility wrapper"""
     email_manager = EmailManager()
     return email_manager.send_adjustment_email(adjustment_results, iteration, cc_emails)

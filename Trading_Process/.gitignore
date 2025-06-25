@@ -1,0 +1,87 @@
+﻿# =============================================================================
+# GITIGNORE - Trading Process
+# =============================================================================
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*credentials.json
+*secrets*
+*password*
+
+# Personal/Company sensitive data
+*.csv
+*.xlsx
+**/Daily_Trades.csv
+**/Daily_trades_use.csv
+**/Funds_stats_dict.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Google Cloud
+*service-account*.json
+*gcp-credentials*.json
+
+# AWS
+.aws/
+*.pem
+
+# Company specific paths (adjust as needed)
+G:/Drives*
+**/Ops-Trading/**
+**/Investment Management/**

@@ -272,4 +272,204 @@ This project is proprietary and confidential. All rights reserved.
 
 **⚡ Built for efficient, automated trading operations**
 
-*Last updated: 2025* 
+*Last updated: 2025*
+
+## 🔒 Security Notice
+
+This project uses environment variables to manage sensitive credentials. **NEVER commit the `.env` file or any files containing secrets to version control.**
+
+## 🚀 Quick Setup
+
+### 1. Clone and Install Dependencies
+
+```bash
+git clone <repository-url>
+cd Trading_Process
+pip install -r requirements.txt
+```
+
+### 2. Environment Configuration
+
+Create a `.env` file in the project root with your credentials:
+
+```bash
+# Copy the example and fill in your values
+cp .env.example .env
+```
+
+Required environment variables:
+
+```env
+# Gmail Configuration
+GMAIL_APP_PASSWORD=your_gmail_app_password
+SENDER_EMAIL=your_email@company.com
+RECIPIENT_EMAIL=recipient@company.com
+CC_EMAILS=email1@company.com,email2@company.com
+
+# Google Cloud Configuration
+GOOGLE_CLOUD_PROJECT_ID=your-gcp-project
+GOOGLE_CLOUD_PROJECT_ID_USERS=your-gcp-users-project
+
+# AWS Configuration
+API_SECRET_ARN=your-aws-secret-arn
+AWS_REGION=us-east-1
+AWS_ACCOUNT_ID=your-aws-account-id
+AWS_ROLE_NAME=your-role-name
+
+# API Endpoints
+INOA_BASE_URL=http://your-internal-api/
+POSTTRADES_BASE_URL=https://your-trading-api.com
+HASHDX_API_BASE_URL=https://your-api.com
+
+# File Paths (adjust to your system)
+CSV_FOLDER_PATH=/path/to/your/csv/folder
+DAILY_TRADES_CSV_PATH=/path/to/daily_trades.csv
+```
+
+### 3. Verify Setup
+
+```python
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+print("✅ Environment loaded successfully!")
+```
+
+## 📊 Usage
+
+### Daily Workflow
+
+```python
+# 1. Morning - Initial Orders
+result_initial = run_initial_orders()
+send_initial_email(result_initial)
+
+# 2. Mid-day - Primary Calculation
+result_nasdaq = run_primary_calculation('nasdaq')
+
+# 3. Afternoon - Adjustment Cycle
+adjustments = run_adjustment_cycle(max_iterations=3)
+send_adjustment_email(adjustments)
+
+# 4. End of Day - Final Allocation
+final_result = complete_adjustment_workflow()
+```
+
+## 🔧 Configuration
+
+### Email Settings
+
+- Uses Gmail SMTP with app passwords
+- Supports HTML email templates
+- Automatic CC to trading team
+
+### Google Cloud Integration
+
+- BigQuery for data storage
+- Automatic table management
+- User confirmation for uploads
+
+### AWS Integration
+
+- Secrets Manager for credential storage
+- IAM role-based authentication
+
+## 📁 Project Structure
+
+```
+Trading_Process/
+├── src/
+│   └── utilities/
+│       ├── Email_sender.py          # Email management
+│       ├── Trading_routines_functions.py  # Core workflows
+│       ├── Auxiliar_function.py     # Helper functions
+│       └── Post_trades_api.py       # API integrations
+├── Daily_functions_new.ipynb        # Main workflow notebook
+├── .env                            # Environment variables (DO NOT COMMIT)
+├── .gitignore                      # Git ignore rules
+├── requirements.txt                # Python dependencies
+└── README.md                       # This file
+```
+
+## 🛡️ Security Best Practices
+
+### Environment Variables
+- All sensitive data is stored in `.env` file
+- `.env` file is excluded from version control
+- Default values provided for non-sensitive configs
+
+### Git Security
+- Comprehensive `.gitignore` excludes sensitive files
+- No hardcoded credentials in source code
+- CSV files and data exports are excluded
+
+### Access Control
+- AWS IAM roles for cloud access
+- Google Cloud service accounts
+- Email app passwords (not account passwords)
+
+## 🚨 Before Committing to GitHub
+
+1. ✅ Verify `.env` file is **NOT** tracked by git:
+   ```bash
+   git status
+   # .env should NOT appear in the list
+   ```
+
+2. ✅ Check for any remaining secrets:
+   ```bash
+   grep -r "password\|secret\|key" src/ --exclude-dir=__pycache__
+   # Should only show environment variable references
+   ```
+
+3. ✅ Verify `.gitignore` is working:
+   ```bash
+   git check-ignore .env
+   # Should output: .env
+   ```
+
+## 📝 Environment Variables Reference
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GMAIL_APP_PASSWORD` | Gmail app-specific password | Yes |
+| `SENDER_EMAIL` | Email address for sending | Yes |
+| `RECIPIENT_EMAIL` | Primary recipient email | Yes |
+| `CC_EMAILS` | Comma-separated CC emails | No |
+| `GOOGLE_CLOUD_PROJECT_ID` | Main GCP project ID | Yes |
+| `GOOGLE_CLOUD_PROJECT_ID_USERS` | Users GCP project ID | Yes |
+| `API_SECRET_ARN` | AWS secrets ARN | Yes |
+| `AWS_REGION` | AWS region | No (default: us-east-1) |
+| `CSV_FOLDER_PATH` | Path for CSV exports | No (has default) |
+| `DAILY_TRADES_CSV_PATH` | Daily trades CSV path | No (has default) |
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **Missing environment variables**:
+   ```
+   ValueError: Missing required environment variables
+   ```
+   Solution: Check your `.env` file has all required variables
+
+2. **Gmail authentication error**:
+   ```
+   SMTPAuthenticationError: Username and Password not accepted
+   ```
+   Solution: Use Gmail app password, not account password
+
+3. **Google Cloud authentication**:
+   ```
+   DefaultCredentialsError
+   ```
+   Solution: Run `gcloud auth application-default login`
+
+## 📞 Support
+
+For issues or questions, contact the Investment Management team.
+
+---
+
+**⚠️ Remember: Never commit sensitive credentials to version control!** 

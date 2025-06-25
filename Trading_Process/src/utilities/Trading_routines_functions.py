@@ -1,9 +1,15 @@
 import pandas as pd
 from typing import Optional
 from google.cloud import bigquery
+import os
+from dotenv import load_dotenv
 
-# BigQuery client
-client = bigquery.Client("hdx-data-platform")
+# Load environment variables
+load_dotenv()
+
+# BigQuery client with project ID from environment
+project_id = os.getenv('GOOGLE_CLOUD_PROJECT_ID', 'hdx-data-platform')
+client = bigquery.Client(project_id)
 
 # Asset lists
 list_thematics = ["DEFI11", "WEB311", "META11", "FOMO11"]
