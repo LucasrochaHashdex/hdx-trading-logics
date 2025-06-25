@@ -1,0 +1,91 @@
+{
+    "onshore": [
+        {
+            "asset_name": "DEFI11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "HASH11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "BITH11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "ETH11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "SOL11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "XRPH11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "META11",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "WEB311",
+            "asset_type": "ETF",
+            "asset_exchange": "B3"
+        }
+    ],
+    "offshore": [
+        {
+            "asset_name": "HDAIF",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "B3"
+        },
+        {
+            "asset_name": "HNBTC",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "HNETH",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "HNSOL",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "HDEFI.BH",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "HNMETA.BH",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "HNWEB3.BH",
+            "asset_type": "ETF_KY",
+            "asset_exchange": "Cayman_exchange"
+        },
+        {
+            "asset_name": "DEFIUS",
+            "asset_type": "ETF",
+            "asset_exchange": "NASDAQ"
+        },
+        {
+            "asset_name": "NCIQ",
+            "asset_type": "ETF",
+            "asset_exchange": "NASDAQ"
+        }
+    ]
+}
